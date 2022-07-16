@@ -55,7 +55,7 @@ func respondToCommands(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 func createCommandResponse(command string) string {
 	switch command {
 	case HELP:
-		var helpResponse = "Available commands are:\n"
+		helpResponse := "Available commands are:\n"
 		for _, command := range commands {
 			helpResponse += fmt.Sprintf("/%s\n", command)
 		}

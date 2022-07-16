@@ -39,12 +39,12 @@ type OpenlogResponses interface {
 const CONNECTION_TIMEOUT = 10
 
 func GetLastError() string {
-	var projectId = os.Getenv("OPENLOG_PROJECT_ID")
-	var uri = fmt.Sprintf("/openlog/api/v1/logs?size=1&severity=error&projectId=%s&orderBy=date", projectId)
-	var logResponse = httpRequest[LogResponse](uri, http.MethodGet, nil)
+	projectId := os.Getenv("OPENLOG_PROJECT_ID")
+	uri := fmt.Sprintf("/openlog/api/v1/logs?size=1&severity=error&projectId=%s&orderBy=date", projectId)
+	logResponse := httpRequest[LogResponse](uri, http.MethodGet, nil)
 
 	if logResponse != nil && len(logResponse.Logs) > 0 {
-		var log = logResponse.Logs[0]
+		log := logResponse.Logs[0]
 		return fmt.Sprintf("LAST ERROR:\n\nProject Id: %s\nHostname: %s\nDate: %s\nSeverity: %s\nCode: %s\nAction: %s\nMessage: %s",
 			fmt.Sprint(log.ProjectId),
 			log.Hostname,
@@ -58,9 +58,9 @@ func GetLastError() string {
 }
 
 func httpRequest[T OpenlogResponses](uri string, method string, body io.Reader) *T {
-	var client = &http.Client{Timeout: CONNECTION_TIMEOUT * time.Second}
+	client := &http.Client{Timeout: CONNECTION_TIMEOUT * time.Second}
 
-	var endpoint = fmt.Sprintf("%s%s", os.Getenv("OPENLOG_API_BASE_PATH"), uri)
+	endpoint := fmt.Sprintf("%s%s", os.Getenv("OPENLOG_API_BASE_PATH"), uri)
 	req, err := http.NewRequest(method, endpoint, body)
 	if err != nil {
 		fmt.Printf("Could not create request: %s\n", err)
@@ -72,7 +72,7 @@ func httpRequest[T OpenlogResponses](uri string, method string, body io.Reader) 
 	}
 	defer res.Body.Close()
 
-	var data = new(T)
+	data := new(T)
 	json.NewDecoder(res.Body).Decode(data)
 	return data
 }
