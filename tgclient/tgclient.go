@@ -5,15 +5,20 @@ import (
 	"log"
 	"os"
 
+	"openlog/olclient"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 // config
 const UPDATE_TIMEOUT = 30
 
-// commands
+// commands strings
 const HELP = "help"
 const GREET = "greet"
+const LAST_ERROR = "lasterr"
+
+var commands = []string{HELP, GREET, LAST_ERROR}
 
 func Run() {
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_API_KEY"))
@@ -50,9 +55,15 @@ func respondToCommands(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 func createCommandResponse(command string) string {
 	switch command {
 	case HELP:
-		return fmt.Sprintf("Available commands are:\n /%s\n /%s", HELP, GREET)
+		var helpResponse = "Available commands are:\n"
+		for _, command := range commands {
+			helpResponse += fmt.Sprintf("/%s\n", command)
+		}
+		return helpResponse
 	case GREET:
 		return "Greetings"
+	case LAST_ERROR:
+		return olclient.GetLastError()
 	default:
 		return fmt.Sprintf("I don't know that command, use /%s for list commands", HELP)
 	}
