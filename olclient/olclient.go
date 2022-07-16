@@ -27,6 +27,11 @@ type LogResponse struct {
 	Logs          []Log
 }
 
+type OtherResponse struct {
+	Name    string
+	Surname string
+}
+
 type OpenlogResponses interface {
 	LogResponse
 }
@@ -36,7 +41,7 @@ const CONNECTION_TIMEOUT = 10
 func GetLastError() string {
 	var projectId = os.Getenv("OPENLOG_PROJECT_ID")
 	var uri = fmt.Sprintf("/openlog/api/v1/logs?size=1&severity=error&projectId=%s&orderBy=date", projectId)
-	var logResponse = httpRequest(uri, http.MethodGet, nil)
+	var logResponse = httpRequest[LogResponse](uri, http.MethodGet, nil)
 
 	if logResponse != nil && len(logResponse.Logs) > 0 {
 		var log = logResponse.Logs[0]
