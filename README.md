@@ -1,6 +1,6 @@
 # OpenLog telegram bot
 
-## Prerequisits
+## Prerequisites
 - [golang](https://go.dev/)
 - A valid Telegram API key
 
