@@ -9,32 +9,14 @@ import (
 	"time"
 )
 
-type Log struct {
-	ProjectId int
-	Hostname  string
-	Date      string
-	Severity  string
-	Code      string
-	Action    string
-	Message   string
-}
-
-type LogResponse struct {
-	TotalPages    int
-	CurrentPage   int
-	TotalElements int
-	Size          int
-	Logs          []Log
-}
-
-type OpenlogResponses interface {
-	LogResponse
-}
-
 func GetLastError() string {
 	projectId := os.Getenv("OPENLOG_PROJECT_ID")
 	uri := fmt.Sprintf("/openlog/api/v1/logs?size=1&severity=error&projectId=%s&orderBy=date", projectId)
-	logResponse := httpRequest[LogResponse](uri, http.MethodGet, nil)
+
+	logResponse, err := httpRequest[LogResponse](uri, http.MethodGet, nil)
+	if err != nil {
+		return "Something went wrong during api request"
+	}
 
 	if logResponse != nil && len(logResponse.Logs) > 0 {
 		log := logResponse.Logs[0]
@@ -50,7 +32,7 @@ func GetLastError() string {
 	return "No errors were found"
 }
 
-func httpRequest[T OpenlogResponses](uri string, method string, body io.Reader) *T {
+func httpRequest[T OpenlogResponses](uri string, method string, body io.Reader) (*T, error) {
 	const CONNECTION_TIMEOUT = 10
 	client := &http.Client{Timeout: CONNECTION_TIMEOUT * time.Second}
 
@@ -58,15 +40,17 @@ func httpRequest[T OpenlogResponses](uri string, method string, body io.Reader) 
 	req, err := http.NewRequest(method, endpoint, body)
 	if err != nil {
 		fmt.Printf("Could not create request: %s\n", err)
+		return nil, err
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
 		fmt.Printf("Could not read response body: %s\n", err)
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	data := new(T)
 	json.NewDecoder(res.Body).Decode(data)
-	return data
+	return data, nil
 }
