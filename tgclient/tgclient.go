@@ -51,7 +51,7 @@ func respondToCommands(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 	msg.Text = createCommandResponse(update.Message.Command())
 
 	if _, err := bot.Send(msg); err != nil {
-		log.Panic(err)
+		log.Panic("Error sending message", err)
 	}
 }
 

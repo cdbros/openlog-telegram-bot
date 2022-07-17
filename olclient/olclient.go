@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -39,13 +40,13 @@ func httpRequest[T OpenlogResponses](uri string, method string, body io.Reader) 
 	endpoint := fmt.Sprintf("%s%s", os.Getenv("OPENLOG_API_BASE_PATH"), uri)
 	req, err := http.NewRequest(method, endpoint, body)
 	if err != nil {
-		fmt.Printf("Could not create request: %s\n", err)
+		log.Print("Could not create request", err)
 		return nil, err
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Could not read response body: %s\n", err)
+		log.Print("Could not read response body", err)
 		return nil, err
 	}
 	defer res.Body.Close()
