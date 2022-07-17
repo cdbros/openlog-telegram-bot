@@ -10,9 +10,6 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-// config
-const UPDATE_TIMEOUT = 30
-
 // commands strings
 const HELP = "help"
 const GREET = "greet"
@@ -42,6 +39,8 @@ func respondToUpdates(bot *tgbotapi.BotAPI) {
 }
 
 func getUpdateConfig() tgbotapi.UpdateConfig {
+	const UPDATE_TIMEOUT = 30
+
 	updateConfig := tgbotapi.NewUpdate(0)
 	updateConfig.Timeout = UPDATE_TIMEOUT
 	return updateConfig

@@ -31,8 +31,6 @@ type OpenlogResponses interface {
 	LogResponse
 }
 
-const CONNECTION_TIMEOUT = 10
-
 func GetLastError() string {
 	projectId := os.Getenv("OPENLOG_PROJECT_ID")
 	uri := fmt.Sprintf("/openlog/api/v1/logs?size=1&severity=error&projectId=%s&orderBy=date", projectId)
@@ -53,6 +51,7 @@ func GetLastError() string {
 }
 
 func httpRequest[T OpenlogResponses](uri string, method string, body io.Reader) *T {
+	const CONNECTION_TIMEOUT = 10
 	client := &http.Client{Timeout: CONNECTION_TIMEOUT * time.Second}
 
 	endpoint := fmt.Sprintf("%s%s", os.Getenv("OPENLOG_API_BASE_PATH"), uri)
