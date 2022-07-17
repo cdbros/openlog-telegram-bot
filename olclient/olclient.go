@@ -20,8 +20,8 @@ func GetLastError() string {
 
 	if logResponse != nil && len(logResponse.Logs) > 0 {
 		log := logResponse.Logs[0]
-		return fmt.Sprintf("LAST ERROR:\n\nProject Id: %s\nHostname: %s\nDate: %s\nSeverity: %s\nCode: %s\nAction: %s\nMessage: %s",
-			fmt.Sprint(log.ProjectId),
+		return fmt.Sprintf("LAST ERROR:\n\nProject Id: %v\nHostname: %s\nDate: %s\nSeverity: %s\nCode: %s\nAction: %s\nMessage: %s",
+			log.ProjectId,
 			log.Hostname,
 			log.Date,
 			log.Severity,
