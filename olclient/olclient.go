@@ -27,11 +27,6 @@ type LogResponse struct {
 	Logs          []Log
 }
 
-type OtherResponse struct {
-	Name    string
-	Surname string
-}
-
 type OpenlogResponses interface {
 	LogResponse
 }
