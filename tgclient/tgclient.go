@@ -18,7 +18,11 @@ const HELP = "help"
 const GREET = "greet"
 const LAST_ERROR = "lasterr"
 
-var commands = []string{HELP, GREET, LAST_ERROR}
+var commands = map[string]string{
+	HELP:       "show this message",
+	GREET:      "say hi",
+	LAST_ERROR: "give the last error by date on openlog database",
+}
 
 func Run() {
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_API_KEY"))
@@ -56,8 +60,8 @@ func createCommandResponse(command string) string {
 	switch command {
 	case HELP:
 		helpResponse := "Available commands are:\n"
-		for _, command := range commands {
-			helpResponse += fmt.Sprintf("/%s\n", command)
+		for command, description := range commands {
+			helpResponse += fmt.Sprintf("/%s - %s\n", command, description)
 		}
 		return helpResponse
 	case GREET:
